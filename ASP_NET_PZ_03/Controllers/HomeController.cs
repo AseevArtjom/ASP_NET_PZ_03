@@ -25,18 +25,7 @@ namespace ASP_NET_PZ_03.Controllers
 
         public  IActionResult AboutMe()
         {
-            var model = new Info
-            {
-                Id = 1,
-                FirstName = "Артём",
-                LastName = "Асеев",
-                ImageSrc = "123.png",
-                City = "Мариуполь",
-                Age = 16,
-                Grade = 10
-            };
-
-            ViewData["Info"] = model;
+            
 
             return View();
         }
@@ -52,6 +41,11 @@ namespace ASP_NET_PZ_03.Controllers
 
             ViewData["Skills"] = model;
 
+            return View();
+        }
+
+        public IActionResult Form()
+        {
             return View();
         }
 

@@ -1,0 +1,38 @@
+﻿@model Info
+@{
+	ViewData["Title"] = "Form";
+}
+<!DOCTYPE html>
+<html>
+	<head>
+		<link rel="stylesheet" href="/css/Form.css">
+	</head>
+
+	<body>
+		<form  action="" method="post">
+			<div class="form_container">
+				 <label>FirstName :</label>
+				 <input type="text"  placeholder="Your FirstName..." asp-for=FirstName>
+				 <p style="color: red; font-size: 13px">
+					@Html.ValidationMessageFor(x=>x.FirstName)
+				</p>
+
+				 <label>LastName :</label>
+				 <input type="text" placeholder="Your LastName..." asp-for=LastName>
+				 <p style="color: red; font-size: 13px">
+					@Html.ValidationMessageFor(x=>x.LastName)
+				</p>
+
+				 <label>Age :</label>
+				 <input type="number" placeholder="Age..." asp-for=Age>
+				  <p style="color: red; font-size: 13px">
+					@Html.ValidationMessageFor(x=>x.Age)
+				  </p>
+
+				 <input type="submit">
+			</div>
+		</form>
+	</body>
+</html>
+
+

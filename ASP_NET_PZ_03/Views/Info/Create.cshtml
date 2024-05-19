@@ -1,0 +1,54 @@
+﻿@model Info
+@{
+	ViewData["Title"] = "Create";
+}
+<head>
+	<link rel="stylesheet" href="/css/Form.css">
+</head>
+<form asp-controller="Info" method="post" asp-action="Create">
+	<div class="form_container">
+		<label>FirstName :</label>
+		<input type="text" placeholder="Your FirstName..." asp-for=FirstName>
+		<p style="color: red; font-size: 13px">
+			@Html.ValidationMessageFor(x=>x.FirstName)
+		</p>
+
+		<label >LastName :</label>
+		<input type="text" placeholder="Your LastName..." asp-for=LastName>
+		<p style="color: red; font-size: 13px">
+			@Html.ValidationMessageFor(x=>x.LastName)
+		</p>
+
+		<label>City :</label>
+		<input type="text" placeholder="Your City..." asp-for=City>
+		<p style="color: red; font-size: 13px">
+			@Html.ValidationMessageFor(x=>x.City)
+		</p>
+
+		<label>Age :</label>
+		<input type="number" placeholder="Your Age..." asp-for=Age>
+		<p style="color: red; font-size: 13px">
+			@Html.ValidationMessageFor(x=>x.Age)
+		</p>
+
+		<label>BirthDay :</label>
+		<input type="date" placeholder="Your BirthDay..." asp-for=BirthDay>
+		<p style="color: red; font-size: 13px">
+			@Html.ValidationMessageFor(x=>x.BirthDay)
+		</p>
+
+		<label>Busy :</label>
+		<input type="checkbox" placeholder="123" asp-for=Busy>
+		<p style="color: red; font-size: 13px">
+			@Html.ValidationMessageFor(x=>x.Busy)
+		</p>
+		
+		<label>Description :</label>
+		<textarea placeholder="Your Description..." asp-for=Description></textarea>
+		<p style="color: red; font-size: 13px">
+			@Html.ValidationMessageFor(x=>x.Description)
+		</p>
+
+		<input type="submit">
+	</div>
+</form>

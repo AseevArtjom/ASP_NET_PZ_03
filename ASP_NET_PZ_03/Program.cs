@@ -1,7 +1,15 @@
+using ASP_NET_PZ_03.Models;
+using ASP_NET_PZ_03.Services;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddSingleton<IObjectCollectionStorage<List<Info>>,FileStorage>(o =>
+{
+    return new FileStorage("info.json");
+});
 
 var app = builder.Build();
 
