@@ -16,6 +16,7 @@
 					<th>ФИО</th>
 					<th>Возраст</th>
 					<th>Город</th>
+					<th>Профессия</th>
 					<th></th>
 				</tr>
 			</thead>
@@ -26,6 +27,7 @@
 						<td>@(item.FirstName + " " + item.LastName)</td>
 						<td>@item.Age</td>
 						<td>@item.City</td>
+						<td>@item.Profession.Name</td>
 						<td>
 							<div class="control">
 								<a asp-controller="Info" asp-action="Edit" asp-route-id="@item.Id" class="btn btn-outline-primary">Изменить</a>

@@ -30,20 +30,6 @@ namespace ASP_NET_PZ_03.Controllers
             return View();
         }
 
-        public IActionResult Skills()
-        {
-            var model = new Skills[] { 
-                new Skills {Name = "C#/C++",Level = 60},
-                new Skills { Name = "SQL", Level = 70 },
-                new Skills {Name = "JS",Level = 80 },
-                new Skills {Name = "React/Angular",Level = 60 } 
-            };
-
-            ViewData["Skills"] = model;
-
-            return View();
-        }
-
         public IActionResult Form()
         {
             return View();

@@ -1,0 +1,18 @@
+﻿@using ASP_NET_PZ_03.Models.Forms
+@model Skill
+@{
+	
+	ViewData["Title"] = "Edit";
+}
+<link rel="stylesheet" href="/css/Form.css">
+
+<form asp-controller="Skill" method="post" asp-action="Edit">
+	<div class="form_container">
+		<label>Title :</label>
+		<input type="text" placeholder="Title..." asp-for=Name>
+
+		<input type="submit">
+	</div>
+</form>
+	
+

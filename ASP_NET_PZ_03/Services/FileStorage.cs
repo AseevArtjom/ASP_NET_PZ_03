@@ -3,7 +3,7 @@ using System.Text.Json;
 
 namespace ASP_NET_PZ_03.Services
 {
-	public class FileStorage : IObjectCollectionStorage<List<Info>>
+	public class FileStorage<T> : IObjectCollectionStorage<T> where T : class
 	{
 		private string _filename;
 
@@ -18,11 +18,11 @@ namespace ASP_NET_PZ_03.Services
 			if(File.Exists(_filename))
 			{
 				using var file = File.OpenRead(_filename);
-                items = await JsonSerializer.DeserializeAsync<List<Info>>(file);
+                items = await JsonSerializer.DeserializeAsync<T>(file);
 			}
 			else
 			{
-                items = new List<Info>();
+				items = Activator.CreateInstance<T>();
 			}
 		}
 
@@ -33,6 +33,6 @@ namespace ASP_NET_PZ_03.Services
         }
 
 
-        public List<Info> items { get; private set; }
+        public T items { get; private set; }
     }
 }

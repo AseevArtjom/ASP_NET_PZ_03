@@ -1,0 +1,10 @@
+﻿@using ASP_NET_PZ_03.Models.Forms
+@model Skill
+@{
+	Layout = "_Layout";
+
+	ViewData["Title"] = Model.Name;	
+}
+<h1>@ViewData["Title"]</h1>
+
+<a class="nav-link text-dark" asp-area="" asp-controller="Skill" asp-action="Edit">Edit</a>

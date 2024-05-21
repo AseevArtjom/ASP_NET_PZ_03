@@ -1,4 +1,5 @@
-﻿@model Info
+﻿@using ASP_NET_PZ_03.Models.Forms
+@model InfoForm
 @{
 	ViewData["Title"] = "Create";
 }
@@ -41,6 +42,12 @@
 		<input type="checkbox" placeholder="123" asp-for=Busy>
 		<p style="color: red; font-size: 13px">
 			@Html.ValidationMessageFor(x=>x.Busy)
+		</p>
+
+		<label asp-for="ProfessionId">Profession :</label>
+		<select asp-for="ProfessionId" asp-items="ViewBag.Professions"></select>
+		<p style="color: red; font-size: 13px">
+			@Html.ValidationMessageFor(x=>x.ProfessionId)
 		</p>
 		
 		<label>Description :</label>

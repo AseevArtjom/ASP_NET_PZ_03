@@ -6,10 +6,21 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
-builder.Services.AddSingleton<IObjectCollectionStorage<List<Info>>,FileStorage>(o =>
+builder.Services.AddSingleton<IObjectCollectionStorage<List<Info>>, FileStorage<List<Info>>>(o =>
 {
-    return new FileStorage("info.json");
+    return new FileStorage<List<Info>>("info.json");
 });
+
+builder.Services.AddSingleton<IObjectCollectionStorage<List<Profession>>, FileStorage<List<Profession>>>(o =>
+{
+    return new FileStorage<List<Profession>>("profession.json");
+});
+
+builder.Services.AddSingleton<IObjectCollectionStorage<List<Skill>>, FileStorage<List<Skill>>>(o =>
+{
+    return new FileStorage<List<Skill>>("skill.json");
+});
+
 
 var app = builder.Build();
 
