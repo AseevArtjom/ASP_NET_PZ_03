@@ -1,18 +1,30 @@
 ﻿@using ASP_NET_PZ_03.Models.Forms
-@model Skill
+@model SkillForm
 @{
-	
 	ViewData["Title"] = "Edit";
+	var Skill = ViewData["Skill"] as Skill;
 }
 <link rel="stylesheet" href="/css/Form.css">
 
-<form asp-controller="Skill" method="post" asp-action="Edit">
+<form asp-controller="Skill" method="post" asp-action="Edit" enctype="multipart/form-data">
 	<div class="form_container">
 		<label>Title :</label>
-		<input type="text" placeholder="Title..." asp-for=Name>
+		<input type="text" placeholder="Title..." asp-for=Title>
+
+		<div cite="d-flex">
+			<div>
+				<label>Current image : </label>
+				<img src="@Skill.Image.ImgSrc" style="height: 50px;"/>
+			</div>
+			<div class="Edit_Image">
+				<label asp-for="Image">Image :</label>
+				<input type="file" asp-for="Image" accept="*.png, *.jpeg,*.jpg" />
+			</div>
+		</div>
 
 		<input type="submit">
 	</div>
 </form>
+
 	
 

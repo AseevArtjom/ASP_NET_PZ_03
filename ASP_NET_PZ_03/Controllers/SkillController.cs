@@ -1,52 +1,68 @@
 ﻿using ASP_NET_PZ_03.Models;
+using ASP_NET_PZ_03.Models.Forms;
 using ASP_NET_PZ_03.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Reflection;
 
 namespace ASP_NET_PZ_03.Controllers
 {
-	public class SkillController : Controller
-	{
-		private readonly IObjectCollectionStorage<List<Skill>> _skillStorage;
+    public class SkillController : Controller
+    {
+        private readonly IObjectCollectionStorage<List<Skill>> _skillStorage;
+        private readonly LocalUploadedFileStorage _fileStorage;
 
-		public SkillController(IObjectCollectionStorage<List<Skill>> skillstorage)
-		{
-			_skillStorage= skillstorage;
-		}
+        public SkillController(IObjectCollectionStorage<List<Skill>> storage, LocalUploadedFileStorage fileStorage)
+        {
+            _skillStorage = storage;
+            _fileStorage = fileStorage;
+        }
 
-		public IActionResult Index()
-		{
-			return View(_skillStorage.items);
-		}
+        public IActionResult Index()
+        {
+            return View(_skillStorage.items);
+        }
 
-		[HttpGet]
-		public IActionResult Create()
-		{
-			return View(new Skill());
-		}
+        [HttpGet]
+        public IActionResult Create()
+        {
+            return View(new SkillForm());
+        }
 
-		[HttpPost]
-		public async Task<IActionResult> Create([FromForm] Skill form)
-		{
-			if (!ModelState.IsValid)
-			{
-				return View(form);
-			}
-			var Random = new Random();
-			var Skill = new Skill();
-			Skill.Id = Random.Next(1,1000);
-			Skill.Name = form.Name;
+        [HttpPost]
+        public async Task<IActionResult> Create([FromForm] SkillForm form)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(form);
+            }
 
-			_skillStorage.items.Add(Skill);
-			await _skillStorage.SaveAsync();
+            var model = new Skill();
+            var random = new Random();
+            model.Id = random.Next(1, 1000);
+            model.Title = form.Title;
 
-			return RedirectToAction("Index");
-		}
+            if (form.Image != null)
+            {
+                model.Image = await _fileStorage.SaveUploadedFileAsync(form.Image);
+            }
+
+            _skillStorage.items.Add(model);
+            await _skillStorage.SaveAsync();
+
+            return RedirectToAction("Index");
+        }
 
         [HttpGet]
         public async Task<IActionResult> Delete(int id)
         {
             var model = _skillStorage.items.FirstOrDefault(x => x.Id == id);
+
+            if (model.Image != null)
+            {
+                _fileStorage.DeleteUploadedFile(model.Image);
+            }
+
             _skillStorage.items.Remove(model);
             await _skillStorage.SaveAsync();
             return RedirectToAction("Index");
@@ -55,26 +71,44 @@ namespace ASP_NET_PZ_03.Controllers
         [HttpGet]
         public IActionResult Edit(int id)
         {
-            var skill = _skillStorage.items.FirstOrDefault(x => x.Id == id);
-            if (skill == null)
+            var model = _skillStorage.items.FirstOrDefault(x => x.Id == id);
+            if (model == null)
             {
                 return NotFound();
             }
-            ViewBag.Skills = new SelectList(_skillStorage.items, "Id", "Name", skill.Id);
-            return View(skill);
+
+            ViewData["Skill"] = model;
+            return View(new SkillForm
+            {
+                Title = model.Title,
+            });
         }
 
         [HttpPost]
-        public async Task<IActionResult> Edit(int id, [FromForm] Skill form)
+        public async Task<IActionResult> Edit(int id, [FromForm] SkillForm form)
         {
+            var model = _skillStorage.items.FirstOrDefault(x => x.Id == id);
+            if (model == null)
+            {
+                return NotFound();
+            }
+
             if (!ModelState.IsValid)
             {
-                ViewBag.Skills = new SelectList(_skillStorage.items, "Id", "Name", form.Id);
+                ViewData["Skill"] = model;
                 return View(form);
             }
 
-            var skill = _skillStorage.items.First(x => x.Id == id);
-            skill.Name = form.Name;
+            model.Title = form.Title;
+
+            if (form.Image != null)
+            {
+                if (model.Image != null)
+                {
+                    _fileStorage.DeleteUploadedFile(model.Image);
+                }
+                model.Image = await _fileStorage.SaveUploadedFileAsync(form.Image);
+            }
 
             await _skillStorage.SaveAsync();
             return RedirectToAction("Index");

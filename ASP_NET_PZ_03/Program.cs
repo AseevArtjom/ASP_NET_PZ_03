@@ -21,6 +21,11 @@ builder.Services.AddSingleton<IObjectCollectionStorage<List<Skill>>, FileStorage
     return new FileStorage<List<Skill>>("skill.json");
 });
 
+builder.Services.AddScoped<LocalUploadedFileStorage>(x =>
+{
+    var env = x.GetRequiredService<IWebHostEnvironment>();
+    return new LocalUploadedFileStorage(Path.Combine(env.WebRootPath,"uploads","images"));
+});
 
 var app = builder.Build();
 
@@ -44,3 +49,6 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.Run();
+
+
+

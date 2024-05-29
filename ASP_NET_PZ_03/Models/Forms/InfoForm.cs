@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Net;
 
 namespace ASP_NET_PZ_03.Models.Forms
 {
@@ -16,6 +17,7 @@ namespace ASP_NET_PZ_03.Models.Forms
             Busy = model.Busy;
             BirthDay = model.BirthDay;
             ProfessionId = model.ProfessionId;
+            Skills = model.Skills;
         }
 
         public void Fill(Info model)
@@ -28,6 +30,7 @@ namespace ASP_NET_PZ_03.Models.Forms
             model.Busy = Busy;
             model.BirthDay = BirthDay;
             model.ProfessionId= ProfessionId;
+            model.Skills = Skills;
         }
 
         [DisplayName("Имя")]
@@ -65,5 +68,7 @@ namespace ASP_NET_PZ_03.Models.Forms
         public DateTime BirthDay { get; set; }
 
         public int ProfessionId { get; set; }
+
+        public List<InfoSkill> Skills { get; set; } = new List<InfoSkill>();
     }
 }

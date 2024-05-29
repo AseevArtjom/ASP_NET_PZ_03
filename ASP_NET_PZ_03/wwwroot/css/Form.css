@@ -59,6 +59,13 @@ input[type="submit"]:hover {
     background-color: #45a049;
 }
 
+input[type="range"]{
+    width: 350px;
+}
+
 .control a{
     margin-left: 190px;
+}
+.Edit_Image{
+    margin-top: 50px;
 }

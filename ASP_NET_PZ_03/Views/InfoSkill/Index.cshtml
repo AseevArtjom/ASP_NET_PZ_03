@@ -1,0 +1,41 @@
+﻿@model List<InfoSkill>
+@{
+	Layout = "_Layout";
+	ViewData["Title"] = "Професии";
+}
+<link rel="stylesheet" href="/css/Form.css">
+
+<a asp-controller="InfoSkill" asp-action="Create" class="btn btn-outline-primary">Создать</a>
+
+<div class="row">
+	<div class="col-12">
+		<table class="table table-hover">
+			<thead>
+				<tr>
+					<th>Id</th>
+					<th>Image</th>
+					<th>Название</th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody>
+				@foreach(var item in Model){
+					<tr>
+						<td>@item.Id</td>
+						<td><img src="@item.Skill.Image.ImgSrc" style="height: 40px;"/></td>
+						<td>@item.Skill.Title</td>
+						<td>
+							<div class="control">
+								<a asp-controller="InfoSkill" asp-action="Edit" asp-route-id="@item.Id" class="btn btn-outline-primary">Изменить</a>
+								<a asp-controller="InfoSkill" asp-action="Delete" asp-route-id="@item.Id" class="btn btn-outline-danger mx-1">Удалить</a>
+							</div>
+						</td>
+					</tr>
+				}
+			</tbody>
+		</tabl>
+	</div>
+</div>
+
+	
+

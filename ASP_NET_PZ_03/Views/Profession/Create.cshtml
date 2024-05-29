@@ -1,16 +1,19 @@
 ﻿@using ASP_NET_PZ_03.Models.Forms
-@model Profession
+@model ProfessionForm
 @{
 	ViewData["Title"] = "Create";
 }
 <head>
 	<link rel="stylesheet" href="/css/Form.css">
 </head>
-<form asp-controller="Profession" method="post" asp-action="Create">
+<form asp-controller="Profession" method="post" asp-action="Create" enctype="multipart/form-data">
 	<div class="form_container">
 
 		<label>Title :</label>
 		<input type="text" placeholder="Title..." asp-for=Name>
+		
+		<label>Image :</label>
+		<input type="file" asp-for="Image" accept="*.png, *.jpeg,*.jpg" />
 
 		<input type="submit">
 	</div>

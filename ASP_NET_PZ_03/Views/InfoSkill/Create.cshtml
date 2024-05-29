@@ -1,0 +1,33 @@
+﻿@using ASP_NET_PZ_03.Models.Forms
+@model InfoSkillForm
+@{
+	ViewData["Title"] = "Create";
+
+	var skills = ViewData["Skills"] as List<Skill>;
+	var list = skills.Select(x => new SelectListItem
+			{
+				Value = x.Id.ToString(),
+				Text = x.Title
+			});
+}
+<head>
+	<link rel="stylesheet" href="/css/Form.css">
+</head>
+<form asp-controller="InfoSkill" method="post" asp-action="Create">
+	<div class="form_container">
+
+		<label asp-for="SkillId">Skill :</label>
+		<select asp-for="SkillId" asp-items="list"></select>
+		<p style="color: red; font-size: 13px">
+			@Html.ValidationMessageFor(x=>x.SkillId)
+		</p>
+
+		<label asp-for="Level">Level :</label>
+		<input asp-for="Level" type="range" min="1" max="100"/>
+		<p style="color: red; font-size: 13px">
+			@Html.ValidationMessageFor(x=>x.Level)
+		</p>
+
+		<input type="submit">
+	</div>
+</form>

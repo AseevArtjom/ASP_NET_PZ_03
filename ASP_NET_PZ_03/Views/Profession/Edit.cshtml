@@ -1,15 +1,27 @@
 ﻿@using ASP_NET_PZ_03.Models.Forms
-@model Profession
+@model ProfessionForm
 @{
-	
+	var profession = ViewData["Profession"] as Profession;
 	ViewData["Title"] = "Edit";
 }
 <link rel="stylesheet" href="/css/Form.css">
 
-<form asp-controller="Profession" method="post" asp-action="Edit">
+<form asp-controller="Profession" method="post" asp-action="Edit" enctype="multipart/form-data">
 	<div class="form_container">
 		<label>Title :</label>
 		<input type="text" placeholder="Title..." asp-for=Name>
+
+
+		<div cite="d-flex">
+			<div>
+				<label>Current image : </label>
+				<img src="@profession.Image.ImgSrc" style="height: 50px;"/>
+			</div>
+			<div class="Edit_Image">
+				<label asp-for="Image">Image :</label>
+				<input type="file" asp-for="Image" accept="*.png, *.jpeg,*.jpg" />
+			</div>
+		</div>
 
 		<input type="submit">
 	</div>

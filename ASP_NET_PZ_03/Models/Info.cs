@@ -25,5 +25,7 @@ namespace ASP_NET_PZ_03.Models
 
         public int ProfessionId { get; set; }
         public Profession? Profession { get; set; }
+
+        public List<InfoSkill> Skills { get; set; }
     }
 }

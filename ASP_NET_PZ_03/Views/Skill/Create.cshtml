@@ -1,17 +1,20 @@
 ﻿@using ASP_NET_PZ_03.Models.Forms
-@model Skill
+@model SkillForm
 @{
-	ViewData["Title"] = "Create";
+    Layout = "_Layout";
+    ViewData["Title"] = "Create";
 }
 <head>
-	<link rel="stylesheet" href="/css/Form.css">
+    <link rel="stylesheet" href="/css/Form.css">
 </head>
-<form asp-controller="Skill" method="post" asp-action="Create">
-	<div class="form_container">
+<form asp-controller="Skill" method="post" asp-action="Create" enctype="multipart/form-data">
+    <div class="form_container">
+        <label>Title :</label>
+        <input type="text" placeholder="Title..." asp-for="Title" />
 
-		<label>Title :</label>
-		<input type="text" placeholder="Title..." asp-for=Name>
+        <label>Image :</label>
+        <input type="file" asp-for="Image" accept="*.png, *.jpeg,*.jpg" />
 
-		<input type="submit">
-	</div>
+        <input type="submit" value="Create" />
+    </div>
 </form>

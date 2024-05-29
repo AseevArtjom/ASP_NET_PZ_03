@@ -13,6 +13,7 @@
 			<thead>
 				<tr>
 					<th>Id</th>
+					<th>Logo</th>
 					<th>Название</th>
 					<th></th>
 				</tr>
@@ -21,7 +22,8 @@
 				@foreach(var item in Model){
 					<tr>
 						<td>@item.Id</td>
-						<td>@item.Name</td>
+						<td><img src="@item.Image.ImgSrc" style="height: 40px;"/></td>
+						<td>@item.Title</td>
 						<td>
 							<div class="control">
 								<a asp-controller="Skill" asp-action="Edit" asp-route-id="@item.Id" class="btn btn-outline-primary">Изменить</a>
