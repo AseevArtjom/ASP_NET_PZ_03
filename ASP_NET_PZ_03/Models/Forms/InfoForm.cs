@@ -9,6 +9,7 @@ namespace ASP_NET_PZ_03.Models.Forms
         public InfoForm() { }
         public InfoForm(Info model)
         {
+            Id = model.Id;
             FirstName = model.FirstName;
             LastName = model.LastName;
             City = model.City;
@@ -32,6 +33,8 @@ namespace ASP_NET_PZ_03.Models.Forms
             model.ProfessionId= ProfessionId;
             model.Skills = Skills;
         }
+
+        public int Id { get; set; }
 
         [DisplayName("Имя")]
         [Required(ErrorMessage = "Имя обязательно")]
@@ -70,5 +73,10 @@ namespace ASP_NET_PZ_03.Models.Forms
         public int ProfessionId { get; set; }
 
         public List<InfoSkill> Skills { get; set; } = new List<InfoSkill>();
+
+        public string? ImageSrc { get; set; }
+
+        [DisplayName("Изображения")]
+        public List<IFormFile>? Images { get; set; }
     }
 }

@@ -1,5 +1,6 @@
 using ASP_NET_PZ_03.Models;
 using ASP_NET_PZ_03.Services;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,6 +28,11 @@ builder.Services.AddScoped<LocalUploadedFileStorage>(x =>
     return new LocalUploadedFileStorage(Path.Combine(env.WebRootPath,"uploads","images"));
 });
 
+builder.Services.AddDbContext<SiteContext>(options =>
+{
+    options.UseSqlite(builder.Configuration.GetConnectionString("Default"));
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -50,5 +56,8 @@ app.MapControllerRoute(
 
 app.Run();
 
-
+app.MapControllerRoute(
+    name: "InfoAndInfoSkill",
+    pattern: "{controller}/{infoId}/{infoSkillId}/{action}"
+);
 

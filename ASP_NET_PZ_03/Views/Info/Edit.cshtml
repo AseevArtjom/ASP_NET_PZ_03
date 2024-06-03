@@ -1,13 +1,65 @@
 ﻿@using ASP_NET_PZ_03.Models.Forms
+@using System.Text.Json
 @model InfoForm
 @{
 	var Skills = ViewData["Skills"] as List<InfoSkill>;
 	ViewData["Title"] = "Edit";
+
+	var uniqueId = Guid.NewGuid().ToString().ToLower().Substring(0, 5);
+	var images = ViewData["Images"] as List<ImageFile> ?? new List<ImageFile>();
 }
 <link rel="stylesheet" href="/css/Form.css">
+<script src="jquery-3.7.1.min.js"></script>
 
-<form asp-controller="Info" method="post" asp-action="Edit">
+<form asp-controller="Info" method="post" asp-action="Edit" enctype="multipart/form-data">
 	<div class="form_container">
+
+
+	<div id="carousel-@uniqueId" class="carousel slide" style="height:250px;width:250px;margin:auto;">
+	  <div class="carousel-indicators">
+		@for (int i = 0; i < images.Count; i++)
+				{
+					<button type="button"data-bs-target="#carosel-@uniqueId" data-bs-slide-to="@i" class="@(i == 0 ? "active":null)" aria-current="true" aria-label="Slide @(i + 1)"></button>
+				}
+	  </div>
+	  <div class="carousel-inner">
+				@{
+					var first = true;
+				}
+				@foreach (var image in images)
+				{
+					<div class="carousel-item @(first ? "active" : null)">
+						<img src="@image.ImgSrc" class="d-block w-100" alt="img">
+						<div class="carousel-caption">
+							<button 
+								data-confirm-message="Do you want to delete image?" 
+								data-successMessage="Image was deleted!" 
+								data-errorMessage="Error!Failed to delete image" 
+								data-body="@JsonSerializer.Serialize(new DeleteInfoImageForm {ImageId = image.Id,InfoId = int.Parse(@ViewContext.RouteData.Values["id"].ToString())})"
+								asp-controller="Info" 
+								asp-action="DeleteImage" 
+								data-info-id="@ViewContext.RouteData.Values["id"]" 
+								data-id="@image.Id" class="btn btn-danger delete-image confirm-action">
+								Удалить
+							</button>
+						</div>
+					</div>
+					first = false;
+				}
+	  </div>
+	  <button class="carousel-control-prev" type="button" data-bs-target="#carousel-@uniqueId" data-bs-slide="prev">
+		<span class="carousel-control-prev-icon bg-dark" aria-hidden="true"></span>
+		<span class="visually-hidden">Previous</span>
+	  </button>
+	  <button class="carousel-control-next" type="button" data-bs-target="#carousel-@uniqueId" data-bs-slide="next">
+		<span class="carousel-control-next-icon bg-dark" aria-hidden="true"></span>
+		<span class="visually-hidden">Next</span>
+	  </button>
+	</div>
+	<div>
+
+	</div>
+
 		<label>FirstName :</label>
 		<input type="text" placeholder="Your FirstName..." asp-for=FirstName>
 		<p style="color: red; font-size: 13px">
@@ -73,15 +125,15 @@
 													<td>@item.Level</td>
 													<td>
 														<div class="control">
-															<a asp-controller="InfoSkill" asp-action="Edit" asp-route-id="@item.Id" class="btn btn-outline-primary" style="margin-left:40px;">Изменить</a>
-															<a asp-controller="InfoSkill" asp-action="Delete" asp-route-id="@item.Id" class="btn btn-outline-danger mx-1">Удалить</a>
+															<a asp-controller="InfoSkill" asp-action="Edit" asp-route-infoId="@ViewContext.RouteData.Values["id"]" asp-route-infoSkillId="@item.Id" class="btn btn-outline-primary" style="margin-left:40px;">Изменить</a>
+															<a asp-controller="InfoSkill" asp-action="Delete" asp-route-infoId="@ViewContext.RouteData.Values["id"]" asp-route-infoSkillId="@item.Id" class="btn btn-outline-danger mx-1">Удалить</a>
 														</div>
 													</td>
 												</tr>
 							}
 				}
 			</tbody>
-		</tabl>
+		</table>
 	</div>
 </div>
 
@@ -89,4 +141,52 @@
 	</div>
 </form>
 	
+@section Scripts{
+	<script>
+		$(".delete-image").on("click",e =>{
+			e.preventDefault()
 
+			console.log("ENTER");
+
+			let target = $(e.target);
+
+			let ConfirmMessage = target.data("confirm-message");
+			let successMessage = target.data("successMessage");
+			let errorMessage = target.data("errorMessage");
+			let body = target.data("body");
+
+			let url = target.attr("formaction");
+			
+
+
+			Swal.fire({
+				title: ConfirmMessage,
+				showDenyButton: true,
+				confirmButtonText : "Confirm",
+				denyButtonText: "Deny",
+			}).then((result) =>{
+				if(result.isConfirmed)
+				{
+					fetch(url,{
+						method: "POST",
+						headers : {
+							"Content-Type":"application/json",
+						},
+							body: JSON.stringify(body)
+						})
+						.then(res => res.json())
+						.then(data=> {
+						if(data.ok){
+								Swal.fire(successMessage,"","success").then(() =>{
+								window.location.reload();
+							});
+						}
+						else{
+								Swal.fire(errorMessage,"","error");
+						}
+					})
+				}
+			});
+		})
+	</script>
+}

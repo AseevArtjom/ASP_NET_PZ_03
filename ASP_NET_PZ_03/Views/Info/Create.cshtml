@@ -2,12 +2,21 @@
 @model InfoForm
 @{
 	ViewData["Title"] = "Create";
+
+
 }
 <head>
 	<link rel="stylesheet" href="/css/Form.css">
 </head>
-<form asp-controller="Info" method="post" asp-action="Create">
+<form asp-controller="Info" method="post" asp-action="Create" enctype="multipart/form-data">
 	<div class="form_container">
+
+
+		<div style="margin-bottom:40px;">
+			<label>Image :</label>
+			<input type="file" asp-for="Images" multiple accept="*.png, *.jpeg,*.jpg" />
+		</div>
+
 		<label>FirstName :</label>
 		<input type="text" placeholder="Your FirstName..." asp-for=FirstName>
 		<p style="color: red; font-size: 13px">

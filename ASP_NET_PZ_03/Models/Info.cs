@@ -27,5 +27,9 @@ namespace ASP_NET_PZ_03.Models
         public Profession? Profession { get; set; }
 
         public List<InfoSkill> Skills { get; set; }
+
+        public string? ImageSrc { get; set; }
+
+        public List<ImageFile>? Images { get; set; }
     }
 }

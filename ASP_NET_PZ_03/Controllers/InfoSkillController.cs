@@ -89,14 +89,23 @@ namespace ASP_NET_PZ_03.Controllers
         }
 
         [HttpGet]
-        public IActionResult Edit(int id)
+        public IActionResult Edit(int infoId,int infoSkillId)
         {
-            var model = _skillStorage.items.FirstOrDefault(x => x.Id == id);
+            var info = _infoStorage.items.First(x => x.Id == infoId);
+            var model = info.Skills.First(x => x.Id == infoSkillId);
+
+            var addedSkills = info.Skills?.Select(s => s.Skill.Id).ToList() ?? new List<int>();
+            ViewData["Skills"] = _skillStorage.items.Where(x=>x.Id == model.Skill.Id || !addedSkills.Contains(x.Id)).ToList();
+
             if (model == null)
             {
                 return NotFound();
             }
-            return View(model);
+            return View(new InfoSkillForm()
+            {
+                Level = model.Level,
+                SkillId = model.Skill.Id
+            });
         }
 
         [HttpPost]
@@ -106,7 +115,7 @@ namespace ASP_NET_PZ_03.Controllers
             {
                 return View(form);
             }
-
+            
             var model = _skillStorage.items.FirstOrDefault(x => x.Id == id);
             if (model == null)
             {

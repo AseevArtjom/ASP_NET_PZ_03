@@ -32,16 +32,17 @@ namespace ASP_NET_PZ_03.Services
             {
                 await formFile.CopyToAsync(file);
             }
-
+            var random = new Random();
             return new ImageFile
             {
+                Id = random.Next(1,5000),
                 Filename = filename,
                 OriginalFilename = formFile.FileName,
             };
         }
         public void DeleteUploadedFile(ImageFile file)
         {
-            var fullPath = "";
+            var fullPath = GetFullFilePath(file.Filename);
             if (File.Exists(fullPath))
             {
                 File.Delete(fullPath);

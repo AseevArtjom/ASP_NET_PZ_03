@@ -12,6 +12,8 @@ namespace ASP_NET_PZ_03.Controllers
         private readonly IObjectCollectionStorage<List<Profession>> _professionStorage;
         private readonly LocalUploadedFileStorage _fileStorage;
 
+        private readonly SiteContext _siteContext;
+
         public ProfessionController(IObjectCollectionStorage<List<Profession>> storage, LocalUploadedFileStorage fileStorage)
         {
             _professionStorage = storage;
