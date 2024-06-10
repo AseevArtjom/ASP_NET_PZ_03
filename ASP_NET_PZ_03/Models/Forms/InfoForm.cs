@@ -17,8 +17,8 @@ namespace ASP_NET_PZ_03.Models.Forms
             Age = model.Age;
             Busy = model.Busy;
             BirthDay = model.BirthDay;
-            ProfessionId = model.ProfessionId;
-            Skills = model.Skills;
+            //Skills = model.Skills;
+            ProfessionId = model.Profession.Id;
         }
 
         public void Fill(Info model)
@@ -30,7 +30,6 @@ namespace ASP_NET_PZ_03.Models.Forms
             model.Age = Age;
             model.Busy = Busy;
             model.BirthDay = BirthDay;
-            model.ProfessionId= ProfessionId;
             model.Skills = Skills;
         }
 
@@ -70,7 +69,7 @@ namespace ASP_NET_PZ_03.Models.Forms
 
         public DateTime BirthDay { get; set; }
 
-        public int ProfessionId { get; set; }
+        public int? ProfessionId { get; set; }
 
         public List<InfoSkill> Skills { get; set; } = new List<InfoSkill>();
 

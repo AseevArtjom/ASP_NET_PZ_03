@@ -4,7 +4,7 @@
     {
         public int Id { get; set; }
         public string Title { get; set; }
-        public ImageFile? Image { get; set; }
+        public virtual ImageFile? Image { get; set; }
     }
 }
  

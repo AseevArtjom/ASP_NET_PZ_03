@@ -96,6 +96,12 @@
 			@Html.ValidationMessageFor(x=>x.Busy)
 		</p>
 
+		<label asp-for="ProfessionId">Profession :</label>
+		<select asp-for="ProfessionId" asp-items="ViewBag.Professions"></select>
+		<p style="color: red; font-size: 13px">
+			@Html.ValidationMessageFor(x=>x.ProfessionId)
+		</p>
+
 		<label>Description :</label>
 		<textarea placeholder="Your Description..." asp-for=Description ></textarea>
 		<p style="color: red; font-size: 13px">

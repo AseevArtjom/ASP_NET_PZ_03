@@ -3,24 +3,29 @@ using ASP_NET_PZ_03.Models.Forms;
 using ASP_NET_PZ_03.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 
 namespace ASP_NET_PZ_03.Controllers
 {
     public class SkillController : Controller
     {
-        private readonly IObjectCollectionStorage<List<Skill>> _skillStorage;
+        private readonly SiteContext _siteContext;
         private readonly LocalUploadedFileStorage _fileStorage;
 
-        public SkillController(IObjectCollectionStorage<List<Skill>> storage, LocalUploadedFileStorage fileStorage)
+        public SkillController(LocalUploadedFileStorage fileStorage,SiteContext sitecontext)
         {
-            _skillStorage = storage;
+            _siteContext = sitecontext;
             _fileStorage = fileStorage;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View(_skillStorage.items);
+            return View(await _siteContext
+                .Skills
+                .Include(i => i.Image)
+                .ToListAsync()
+                );
         }
 
         [HttpGet]
@@ -38,8 +43,6 @@ namespace ASP_NET_PZ_03.Controllers
             }
 
             var model = new Skill();
-            var random = new Random();
-            model.Id = random.Next(1, 1000);
             model.Title = form.Title;
 
             if (form.Image != null)
@@ -47,8 +50,8 @@ namespace ASP_NET_PZ_03.Controllers
                 model.Image = await _fileStorage.SaveUploadedFileAsync(form.Image);
             }
 
-            _skillStorage.items.Add(model);
-            await _skillStorage.SaveAsync();
+            await _siteContext.Skills.AddAsync(model);
+            await _siteContext.SaveChangesAsync();
 
             return RedirectToAction("Index");
         }
@@ -56,22 +59,22 @@ namespace ASP_NET_PZ_03.Controllers
         [HttpGet]
         public async Task<IActionResult> Delete(int id)
         {
-            var model = _skillStorage.items.FirstOrDefault(x => x.Id == id);
+            var model = await _siteContext.Skills.Include(i => i.Image).FirstAsync(x => x.Id == id);
 
             if (model.Image != null)
             {
                 _fileStorage.DeleteUploadedFile(model.Image);
             }
-
-            _skillStorage.items.Remove(model);
-            await _skillStorage.SaveAsync();
+            _siteContext.Remove(model);
+            await _siteContext.SaveChangesAsync();
             return RedirectToAction("Index");
         }
 
         [HttpGet]
-        public IActionResult Edit(int id)
+        public async Task<IActionResult> Edit(int id)
         {
-            var model = _skillStorage.items.FirstOrDefault(x => x.Id == id);
+            var model = await _siteContext.Skills.Include(i => i.Image).FirstAsync(x => x.Id == id);
+
             if (model == null)
             {
                 return NotFound();
@@ -87,7 +90,7 @@ namespace ASP_NET_PZ_03.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(int id, [FromForm] SkillForm form)
         {
-            var model = _skillStorage.items.FirstOrDefault(x => x.Id == id);
+            var model = await _siteContext.Skills.Include(i => i.Image).FirstAsync(x => x.Id == id);
             if (model == null)
             {
                 return NotFound();
@@ -110,7 +113,7 @@ namespace ASP_NET_PZ_03.Controllers
                 model.Image = await _fileStorage.SaveUploadedFileAsync(form.Image);
             }
 
-            await _skillStorage.SaveAsync();
+            await _siteContext.SaveChangesAsync();
             return RedirectToAction("Index");
         }
     }

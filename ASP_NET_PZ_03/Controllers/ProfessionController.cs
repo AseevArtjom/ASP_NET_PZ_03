@@ -3,26 +3,29 @@ using ASP_NET_PZ_03.Models.Forms;
 using ASP_NET_PZ_03.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 
 namespace ASP_NET_PZ_03.Controllers
 {
     public class ProfessionController : Controller
     {
-        private readonly IObjectCollectionStorage<List<Profession>> _professionStorage;
         private readonly LocalUploadedFileStorage _fileStorage;
-
         private readonly SiteContext _siteContext;
 
-        public ProfessionController(IObjectCollectionStorage<List<Profession>> storage, LocalUploadedFileStorage fileStorage)
+        public ProfessionController(SiteContext siteContext, LocalUploadedFileStorage storage)
         {
-            _professionStorage = storage;
-            _fileStorage = fileStorage;
+            _siteContext = siteContext;
+            _fileStorage = storage;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View(_professionStorage.items);
+            return View(await _siteContext
+                .Professions
+                .Include(i => i.Image)
+                .ToListAsync()
+                );
         }
 
         [HttpGet]
@@ -36,44 +39,43 @@ namespace ASP_NET_PZ_03.Controllers
         {
             if (!ModelState.IsValid)
             {
-                ViewBag.Professions = new SelectList(_professionStorage.items, "Id", "Name");
+                ViewBag.Professions = new SelectList(_siteContext.Professions, "Id", "Name");
                 return View(form);
             }
 
             var info = new Profession();
-            var random = new Random();
-            info.Id = random.Next(1, 1000);
+
             info.Name = form.Name;
+            _siteContext.Add(info);
 
             if (form.Image != null)
             {
                 info.Image = await _fileStorage.SaveUploadedFileAsync(form.Image);
             }
 
-            _professionStorage.items.Add(info);
-            await _professionStorage.SaveAsync();
+            await _siteContext.SaveChangesAsync();
             return RedirectToAction("Index");
         }
 
         [HttpGet]
         public async Task<IActionResult> Delete(int id)
         {
-            var model = _professionStorage.items.FirstOrDefault(x => x.Id == id);
+            var model = _siteContext.Professions.First(x => x.Id == id);
 
             if (model.Image != null)
             {
-                _fileStorage.DeleteUploadedFile(model.Image);
+                _fileStorage.DeleteUploadedFile(model.Image); ;
             }
 
-            _professionStorage.items.Remove(model);
-            await _professionStorage.SaveAsync();
+            _siteContext.Remove(model);
+            await _siteContext.SaveChangesAsync();
             return RedirectToAction("Index");
         }
 
         [HttpGet]
         public IActionResult Edit(int id)
         {
-            var model = _professionStorage.items.FirstOrDefault(x => x.Id == id);
+            var model = _siteContext.Professions.First(x => x.Id == id);
             if (model == null)
             {
                 return NotFound();
@@ -89,7 +91,7 @@ namespace ASP_NET_PZ_03.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(int id, [FromForm] ProfessionForm form)
         {
-            var model = _professionStorage.items.FirstOrDefault(x => x.Id == id);
+            var model = _siteContext.Professions.First(x => x.Id == id);
             if (model == null)
             {
                 return NotFound();
@@ -112,7 +114,7 @@ namespace ASP_NET_PZ_03.Controllers
                 model.Image = await _fileStorage.SaveUploadedFileAsync(form.Image);
             }
 
-            await _professionStorage.SaveAsync();
+            await _siteContext.SaveChangesAsync();
             return RedirectToAction("Index");
         }
 
