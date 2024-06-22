@@ -1,0 +1,11 @@
+﻿@using ASP_NET_PZ_03.Models.Forms;
+
+@model HomeSearchForm;
+
+@{
+
+}
+<form method="post" class="d-flex" role="search" style="width:500px;margin:auto;margin-bottom:40px;">
+    <input asp-for="Text" class="form-control me-2" type="search" placeholder="Search..." aria-label="Search" style="">
+    <button class="btn btn-outline-success" type="submit">Search</button>
+</form>

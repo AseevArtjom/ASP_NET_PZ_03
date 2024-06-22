@@ -1,0 +1,42 @@
+﻿@model Info
+
+@foreach(var item in Model.Reviews)
+{
+    <div class="card" style="width: 100%; margin-bottom: 20px;">
+        <div class="card-body">
+            <h5 class="card-title">@item.ClientName</h5>
+            <h6 class="card-title">@item.ClientEmail</h6>
+            <h6 class="card-subtitle mb-2 text-muted">Создано @item.CreatedAt</h6>
+            <div class="star-rating" style="margin-bottom: 15px;margin-top:10px;">
+                <i class="fa fa-star fa-xl" data-rating="1"></i>
+                <i class="fa fa-star fa-xl" data-rating="2"></i>
+                <i class="fa fa-star fa-xl" data-rating="3"></i>
+                <i class="fa fa-star fa-xl" data-rating="4"></i>
+                <i class="fa fa-star fa-xl" data-rating="5"></i>
+                <input type="hidden" class="rating-value" value="@item.Rate"/>
+            </div>
+            <h5 class="card-text">@item.Text</h5>
+        </div>
+    </div>
+}
+
+
+<script>
+        $(document).ready(function() {
+                var $star_rating = $('.star-rating .fa');
+
+                    var SetRatingStar = function() {
+                        return $star_rating.each(function() {
+                            if (parseInt($(this).data('rating')) <= parseFloat($(this).siblings('input.rating-value').val())) {
+                                $(this).addClass('checked');
+                            } else {
+                                $(this).removeClass('checked');
+                            }
+                        });
+                    };
+
+                    SetRatingStar();
+        });
+    </script>
+
+

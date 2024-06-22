@@ -1,21 +1,44 @@
 ﻿using ASP_NET_PZ_03.Models;
+using ASP_NET_PZ_03.Models.Forms;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 
 namespace ASP_NET_PZ_03.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        private readonly SiteContext _siteContext;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(SiteContext siteContext)
         {
-            _logger = logger;
-        }
+            _siteContext = siteContext;
+        }  
+        
+        public async Task<IActionResult> Index([FromForm] HomeSearchForm form)
+        {
+            ViewData["SearchForm"] = form;
+            if (form.Text == null)
+            {
+                form.Text = String.Empty;
+            }
 
-        public IActionResult Index()
-        {
-            return View();
+            var models = await _siteContext
+                .Infos
+                .Include(i => i.Images)
+                .Include(p => p.Profession)
+                .Include(r => r.Reviews)
+                .Include(s => s.Skills)
+                .ThenInclude(s => s.Skill)
+                .ThenInclude(i => i.Image)
+                .Where(x => x.FirstName.Contains(form.Text)
+                || x.Description.Contains(form.Text)
+                || EF.Functions.Like(x.LastName, $"%{form.Text}%")
+                || EF.Functions.Like(x.Profession.Name, $"%{form.Text}%")
+                )
+                .ToListAsync();
+
+            return View(models);
         }
 
         public IActionResult Privacy()
@@ -34,6 +57,8 @@ namespace ASP_NET_PZ_03.Controllers
         {
             return View();
         }
+
+        
 
 
 

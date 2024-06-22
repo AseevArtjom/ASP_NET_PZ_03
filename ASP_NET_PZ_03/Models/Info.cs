@@ -11,6 +11,7 @@ namespace ASP_NET_PZ_03.Models
         {
             Skills = new List<InfoSkill>();
             Images = new List<ImageFile>();
+            Reviews = new List<Review>();
         }
 
         public int Id { get; set; }
@@ -34,5 +35,10 @@ namespace ASP_NET_PZ_03.Models
         public virtual ICollection<InfoSkill> Skills { get; set; }
 
         public virtual ICollection<ImageFile> Images { get; set; }
+
+        public virtual ICollection<Review> Reviews { get; set; }
+
+        public decimal Rating => Reviews.Average(x => (decimal)x.Rate);
+        public decimal RatingPercent => Rating / 5 * 100;
     }
 }

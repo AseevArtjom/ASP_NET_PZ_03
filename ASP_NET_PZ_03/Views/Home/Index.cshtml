@@ -1,8 +1,222 @@
-﻿@{
+﻿@using ASP_NET_PZ_03.Models.Forms;
+
+@model List<Info>
+@{
     ViewData["Title"] = "Home Page";
+    var searchForm = ViewData["SearchForm"] as HomeSearchForm;
 }
 
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <h1 class="display-4">Список</h1>
 </div>
+
+@await Html.PartialAsync("SearchForm", searchForm)
+
+<div class="row">
+    <div class="col-12 d-flex" style="flex-wrap: wrap;">
+        @foreach (var item in Model)
+        {
+                <div class="card" style="width: 18rem; margin-right: 20px; margin-bottom: 20px; padding-left: 10px; padding-top: 10px;">
+                @{
+                    string imgSrc = item.Images != null && item.Images.Any()
+                                    ? item.Images.First().ImgSrc
+                                    : "/Assets/images/UserIcon.png";
+                }
+
+                    <div class="card-img-top d-flex justify-content-center" style="align-items: center;">
+                        <img src="@imgSrc" alt="..." style="height: 100px; width: 100px;">
+                    </div>
+
+                    <div class="card-body">
+                        <h5 class="card-title">@(item.FirstName + " " + item.LastName)</h5>
+                        <h6>@item.Age years old</h6>
+                        <h6>@item.City</h6>
+                        <h6>@item.Profession.Name</h6>
+                        <button style="margin-bottom: 10px; height: 20px; width: 80px; padding: 0px; font-size: 12px" type="button" class="btn btn-outline-dark open-reviews-modal" data-bs-toggle="modal" data-bs-target="#ReviewModal" data-info-id="@item.Id">
+                            ►Reviews◄
+                        </button>
+                        <div>
+                            <a asp-controller="Info" asp-action="Edit" asp-route-id="@item.Id" class="btn btn-outline-primary">Edit</a>
+                            <a asp-controller="Info" asp-action="Delete" asp-route-id="@item.Id" class="btn btn-outline-danger mx-1">Delete</a>
+                        </div>
+                    </div>
+                </div>
+        }
+    </div>
+</div>
+
+<!-- Review Modal -->
+<div class="modal fade" id="ReviewModal" tabindex="-1" aria-labelledby="ReviewModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" style="width: 800px; margin-left: -150px; height: 700px; margin-top: 100px;">
+            <div class="modal-header">
+                <h5 class="modal-title" id="ReviewModalLabel">Reviews</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="Review-modal" style="overflow-y: scroll;">
+                
+            </div>
+            <div class="modal-footer">
+                <button type="button" style="margin-right: auto;" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="openWriteReviewModal" data-bs-toggle="modal" data-bs-target="#WriteReviewModal">Write Review</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Write Review Modal -->
+<div class="modal fade" id="WriteReviewModal" tabindex="-1" aria-labelledby="WriteReviewModal" aria-hidden="true">
+    <div class="modal-dialog">
+        <form asp-controller="Review" asp-action="AddReview">
+            <div class="modal-content" style="width: 400px; height: 480px; margin-top: 250px;">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="ReviewModalLabel">Review</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="input-group mb-3">
+                        <span class="input-group-text"><span class="fa-solid fa-user"></span></span>
+                        <input name="ClientName" type="text" class="form-control" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1">
+                    </div>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text" id="basic-addon1"><span class="fa-solid fa-envelope"></span></span>
+                        <input name="ClientEmail" type="text" class="form-control" placeholder="Email" aria-label="Email" aria-describedby="basic-addon1">
+                    </div>
+                    <div class="write-star-rating" style="margin-bottom: 15px; text-align: center;">
+                        <i class="fa fa-star fa-xl" data-rating="1"></i>
+                        <i class="fa fa-star fa-xl" data-rating="2"></i>
+                        <i class="fa fa-star fa-xl" data-rating="3"></i>
+                        <i class="fa fa-star fa-xl" data-rating="4"></i>
+                        <i class="fa fa-star fa-xl" data-rating="5"></i>
+                        <input type="hidden" class="rating-value" value="0"/>
+                    </div>
+                    <div class="input-group">
+                        <textarea name="Text" class="form-control" style="width: 350px; height: 150px; resize: none;"></textarea>
+                    </div>
+                    <input type="hidden" name="InfoId" id="infoId" value=""/>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="closeWriteReviewModal" style="margin-right: auto;">Back</button>
+                    <button type="submit" class="btn btn-success add-review" data-bs-dismiss="modal" id="closeWriteReviewModal">Submit</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts{
+        <script>
+            $(document).ready(function() {
+                // Modal
+                $('#openWriteReviewModal').on('click', function() {
+                    $('#ReviewModal').modal('hide');
+                    $('#WriteReviewModal').modal('show');
+                });
+
+                $('#closeWriteReviewModal').on("click", function() {
+                    $('#ReviewModal').modal('show');
+                    $('#WriteReviewModal').modal('hide');
+                });
+
+                var $star_rating = $('.write-star-rating .fa');
+
+                var SetRatingStar = function() {
+                    return $star_rating.each(function() {
+                        if (parseInt($(this).data('rating')) <= parseFloat($(this).siblings('input.rating-value').val())) {
+                            $(this).addClass('checked');
+                        } else {
+                            $(this).removeClass('checked');
+                        }
+                    });
+                };
+
+                SetRatingStar();
+
+                $star_rating.on('click', function() {
+                    $(this).siblings('input.rating-value').val($(this).data('rating'));
+                    SetRatingStar();
+                });
+
+                $(".open-reviews-modal").on("click", function() {
+                    var infoId = $(this).data('info-id');
+                    $("#infoId").val(infoId);
+
+                    let url = `/Review/ShowReviewsModalAjax/${infoId}`;
+                    let contentEl = $("#Review-modal");
+
+                    fetch(url, {
+                        method: "GET",
+                        headers: {
+                            "Content-Type": "application/json"
+                        }
+                    })
+                    .then(r => r.text())
+                    .then(html => {
+                        contentEl.html(html)
+                    })
+                    
+                });
+
+                
+
+
+
+                // Submit
+                $("button.add-review").on("click", function(e) {
+                    let review = {
+                        text: "",
+                        rate: null,
+                        clientName: null,
+                        clientEmail: null
+                    };
+
+                    e.preventDefault();
+
+                    review.clientName = $("input[name=ClientName]").val();
+                    review.clientEmail = $("input[name=ClientEmail]").val();
+                    review.text = $("textarea[name=Text]").val();
+                    review.rate = $('.write-star-rating .rating-value').val();
+
+                    console.log(review);
+
+                    let id = $("#infoId").val();
+
+                    console.log(id);
+
+                    let url = `Review/AddReview/${id}`;
+
+                    fetch(url, {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify(review)
+                    })
+                    .then(r => r.json())
+                    .then(data => {
+                        console.log(data);
+                        if (data.ok) {
+                            Swal.fire("Review added!", "", "success")
+                            .then(() => {
+                                window.location.reload();
+                            });
+                        } else {
+                            Swal.fire("Error", "", "error");
+                        }
+                    });
+                });
+            });
+        </script>
+}
+    <style>
+        .star-rating {
+            line-height: 32px;
+            font-size: 1.25em;
+        }
+        .fa-star.checked {
+            color: #FFD43B;
+        }
+        .write-star-rating .fa-star {
+            margin: 10px;
+        }
+    </style>

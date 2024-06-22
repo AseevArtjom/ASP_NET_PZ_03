@@ -1,5 +1,6 @@
 using ASP_NET_PZ_03.Models;
 using ASP_NET_PZ_03.Services;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -7,6 +8,8 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
+
+/*
 builder.Services.AddSingleton<IObjectCollectionStorage<List<Info>>, FileStorage<List<Info>>>(o =>
 {
     return new FileStorage<List<Info>>("info.json");
@@ -21,6 +24,7 @@ builder.Services.AddSingleton<IObjectCollectionStorage<List<Skill>>, FileStorage
 {
     return new FileStorage<List<Skill>>("skill.json");
 });
+*/
 
 builder.Services.AddScoped<LocalUploadedFileStorage>(x =>
 {
@@ -28,10 +32,28 @@ builder.Services.AddScoped<LocalUploadedFileStorage>(x =>
     return new LocalUploadedFileStorage(Path.Combine(env.WebRootPath,"uploads","images"));
 });
 
+
 builder.Services.AddDbContext<SiteContext>(options =>
 {
     options.UseSqlite(builder.Configuration.GetConnectionString("Default"));
 });
+
+builder.Services.AddIdentity<User, IdentityRole<int>>(options =>
+{
+    options.SignIn.RequireConfirmedPhoneNumber = false;
+    options.SignIn.RequireConfirmedEmail = false;
+    options.SignIn.RequireConfirmedAccount = false;
+
+    options.Password.RequiredLength = 3;
+    options.Password.RequiredUniqueChars = 0;
+    options.Password.RequireNonAlphanumeric = false;
+    options.Password.RequireDigit = false;
+    options.Password.RequireLowercase = false;
+    options.Password.RequireUppercase = false;
+})
+    .AddRoles<IdentityRole<int>>()
+    .AddEntityFrameworkStores<SiteContext>()
+    .AddDefaultTokenProviders();
 
 var app = builder.Build();
 
@@ -48,6 +70,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(

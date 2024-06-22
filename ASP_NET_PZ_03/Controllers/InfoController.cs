@@ -4,6 +4,7 @@ using ASP_NET_PZ_03.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -26,6 +27,8 @@ namespace ASP_NET_PZ_03.Controllers
                 await _siteContext
                 .Infos
                 .Include(p => p.Profession)
+                .Include(i => i.Images)
+                .Include(r => r.Reviews)
                 .Include(s => s.Skills)
                 .ThenInclude(s => s.Skill)
                 .ThenInclude(i => i.Image)
@@ -173,6 +176,6 @@ namespace ASP_NET_PZ_03.Controllers
                 return Json(new { Ok = false });
             }
         }
-
     }
+
 }

@@ -1,0 +1,29 @@
+﻿@using ASP_NET_PZ_03.Models.Forms
+@model LoginForm
+@{
+	Layout = "_Layout";
+	ViewData["Title"] = "Login";
+
+
+}
+<head>
+	<link rel="stylesheet" href="/css/Form.css">
+</head>
+<form method="post" enctype="multipart/form-data">
+	<div class="form_container">
+		<label>Email :</label>
+		<input type="text" placeholder="Your Email..." asp-for=Email>
+		<p style="color: red; font-size: 13px">
+			@Html.ValidationMessageFor(x=>x.Email)
+		</p>
+
+		<label >Password :</label>
+		<input type="text" placeholder="Your Password..." asp-for=Password>
+		<p style="color: red; font-size: 13px">
+			@Html.ValidationMessageFor(x=>x.Password)
+		</p>
+
+		<button type="submit" class="btn btn-success">Войти</button>
+		<a asp-controller="Account" asp-action="Register" asp-route-return-url="@Context.Request.Query["ReturnUrl"]" class="btn btn-secondary">Регистрация</a>
+	</div>
+</form>

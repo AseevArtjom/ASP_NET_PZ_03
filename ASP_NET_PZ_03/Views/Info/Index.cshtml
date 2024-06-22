@@ -1,45 +1,86 @@
 ﻿@model List<Info>
 @{
-	Layout = "_Layout";
-	ViewData["Title"] = "Список";
+    Layout = "_Layout";
+    ViewData["Title"] = "Список";
 }
 <link rel="stylesheet" href="/css/Form.css">
 
-<a asp-controller="Info" asp-action="Create" class="btn btn-outline-primary">Создать</a>
+<a asp-controller="Info" asp-action="Create" style="margin-bottom:30px;" class="btn btn-outline-primary">Создать</a>
 
 <div class="row">
-	<div class="col-12">
-		<table class="table table-hover">
-			<thead>
-				<tr>
-					<th>Id</th>
-					<th>ФИО</th>
-					<th>Возраст</th>
-					<th>Город</th>
-					<th>Профессия</th>
-					<th></th>
-				</tr>
-			</thead>
-			<tbody>
-				@foreach(var item in Model){
-					<tr>
-						<td>@item.Id</td>
-						<td>@(item.FirstName + " " + item.LastName)</td>
-						<td>@item.Age</td>
-						<td>@item.City</td>
-						<td>@item.Profession.Name</td>
-						<td>
-							<div class="control">
-								<a asp-controller="Info" asp-action="Edit" asp-route-id="@item.Id" class="btn btn-outline-primary">Изменить</a>
-								<a asp-controller="Info" asp-action="Delete" asp-route-id="@item.Id" class="btn btn-outline-danger mx-1">Удалить</a>
-							</div>
-						</td>
-					</tr>
-				}
-			</tbody>
-		</tabl>
-	</div>
+    <form asp-controller="Home" asp-action="Search" class="d-flex" role="search" style="width:500px;margin:auto;margin-bottom:40px;">
+        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" style="">
+        <button class="btn btn-outline-success" type="submit">Search</button>
+      </form>
+    <div class="col-12 d-flex" style="flex-wrap:wrap;">
+        @foreach (var item in Model)
+        {
+                <div class="card" style="width: 18rem;margin-right:20px;margin-bottom:20px;padding-left:10px;padding-top:10px;">
+                @{
+                    string imgSrc = item.Images != null && item.Images.Any()
+                                    ? item.Images.First().ImgSrc
+                                    : "/Assets/images/UserIcon.png";
+                }
+
+                    <div class="card-img-top d-flex justify-content-center" style="align-items:center;">
+                        <img src="@imgSrc" alt="..." style="height:100px;width:100px;">
+                    </div>
+
+                    <div class="card-body">
+                        <h5 class="card-title">@(item.FirstName + " " + item.LastName)</h5>
+                        <h6>@item.Age</h6>
+                        <h6>@item.City</h6>
+                        <h6>@item.Profession.Name</h6>
+
+                        <div class="star-rating">
+                            <i class="fa fa-star" data-rating="1"></i>
+                            <i class="fa fa-star" data-rating="2"></i>
+                            <i class="fa fa-star" data-rating="3"></i>
+                            <i class="fa fa-star" data-rating="4"></i>
+                            <i class="fa fa-star" data-rating="5"></i>
+                            <input type="hidden" class="rating-value" value="0">
+                        </div>
+
+                        <div>
+                            <a asp-controller="Info" asp-action="Edit" asp-route-id="@item.Id" class="btn btn-outline-primary">Изменить</a>
+                            <a asp-controller="Info" asp-action="Delete" asp-route-id="@item.Id" class="btn btn-outline-danger mx-1">Удалить</a>
+                        </div>
+                    </div>
+                </div>
+        }
+    </div>
 </div>
 
-	
+@section Scripts{
+        <script>
+            $(document).ready(function() {
+                var $star_rating = $('.star-rating .fa');
 
+                var SetRatingStar = function() {
+                    return $star_rating.each(function() {
+                        if (parseInt($(this).data('rating')) <= parseFloat($(this).siblings('input.rating-value').val())) {
+                            $(this).addClass('checked');
+                        } else {
+                            $(this).removeClass('checked');
+                        }
+                    });
+                };
+
+                SetRatingStar();
+                $star_rating.on('click', function() {
+                    $(this).siblings('input.rating-value').val($(this).data('rating'));
+                    SetRatingStar();
+                });
+            });
+        </script>
+}
+    <style>
+        .star-rating {
+            line-height: 32px;
+            font-size: 1.25em;
+        }
+        .fa-star.checked {
+            color: #FFD43B;
+        }
+
+    </style>
