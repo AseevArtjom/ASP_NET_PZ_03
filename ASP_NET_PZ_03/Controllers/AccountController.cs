@@ -22,7 +22,6 @@ namespace ASP_NET_PZ_03.Controllers
             return View(new LoginForm());
         }
 
- 
         [HttpGet]
         public IActionResult Register(string? returnPath)
         {
@@ -115,6 +114,13 @@ namespace ASP_NET_PZ_03.Controllers
             var principal = new ClaimsPrincipal(identity);
 
             await HttpContext.SignInAsync(IdentityConstants.ApplicationScheme, principal);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Logout()
+        {
+            await HttpContext.SignOutAsync(IdentityConstants.ApplicationScheme);
+            return RedirectToAction("Index", "Home");
         }
     }
 }

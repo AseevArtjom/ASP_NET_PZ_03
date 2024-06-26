@@ -29,7 +29,7 @@
 			@Html.ValidationMessageFor(x=>x.Password)
 		</p>
 
-		<button type="submit" class="btn btn-success">Зарегестрироваться</button>
-		<a asp-controller="Account" asp-action="Login" asp-route-return-url="@Context.Request.Query["ReturnUrl"]" class="btn btn-secondary">Войти</a>
+		<button type="submit" class="btn btn-success">Register</button>
+		<a asp-controller="Account" asp-action="Login" asp-route-return-url="@Context.Request.Query["ReturnUrl"]" class="btn btn-secondary">Login</a>
 	</div>
 </form>

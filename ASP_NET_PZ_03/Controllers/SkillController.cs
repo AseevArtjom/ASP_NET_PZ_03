@@ -1,6 +1,7 @@
 ﻿using ASP_NET_PZ_03.Models;
 using ASP_NET_PZ_03.Models.Forms;
 using ASP_NET_PZ_03.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -8,6 +9,7 @@ using System.Reflection;
 
 namespace ASP_NET_PZ_03.Controllers
 {
+    [Authorize]
     public class SkillController : Controller
     {
         private readonly SiteContext _siteContext;
