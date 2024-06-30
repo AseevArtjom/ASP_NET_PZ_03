@@ -3,13 +3,15 @@ using System.ComponentModel.DataAnnotations;
 
 namespace ASP_NET_PZ_03.Models.Forms
 {
-    public class RegisterForm : LoginForm
+    public class ResetPasswordForm
     {
         [Required]
-        [Display(Name ="Full Name")]
-        public string FullName { get; set; }
+        [Display(Name ="New Password")]
+        public string NewPassword { get; set; }
+
         [Required]
-        [Display(Name ="Confirm password")]
+        [Display(Name ="Confirm Password")]
+        
         public string ConfirmPassword { get; set; }
     }
 }

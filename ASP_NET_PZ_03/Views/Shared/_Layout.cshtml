@@ -41,16 +41,24 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Skill" asp-action="Index">Skills</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="Index">Users</a>
+                        </li>
                     </ul>
                     @if(User.Identity.IsAuthenticated){
+                        var userName = User.Claims.First(x => x.Type == ClaimTypes.Name).Value;
+                        if(userName == string.Empty)
+                        {
+                            userName = User.Claims.First(x => x.Type == ClaimTypes.Email).Value;
+                        }
                         <div class="navbar-nav">
                             <li>
                                 <div class="dropdown dropstart">
                                   <button class="btn btn-danger dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    @User.Claims.First(x => x.Type == ClaimTypes.Email).Value
+                                    @userName
                                   </button>
                                   <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" href="#">Profile</a></li>
+                                    <li><a class="dropdown-item" asp-controller="Profile" asp-action="Index">Profile</a></li>
                                     <li><a class="dropdown-item" href="#">Another action</a></li>
                                         <li>
                                             <form method="post" >

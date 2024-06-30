@@ -53,6 +53,7 @@ namespace ASP_NET_PZ_03.Controllers
             {
                 Email = form.Email,
                 UserName = form.Email,
+                FullName = form.FullName
             };
 
             var result = await _userManager.CreateAsync(user,form.Password);
@@ -88,7 +89,7 @@ namespace ASP_NET_PZ_03.Controllers
                 return View(form);
             }
 
-            if (await _userManager.CheckPasswordAsync(user,form.Password))
+            if (!await _userManager.CheckPasswordAsync(user,form.Password))
             {
                 ModelState.AddModelError(nameof(form.Password), "Invalid password");
                 return View(form);
@@ -101,7 +102,7 @@ namespace ASP_NET_PZ_03.Controllers
                 return Redirect(returnPath);
             }
 
-            return View();
+            return RedirectToAction("Index","Home");
         }
 
         private async Task SignIn(User user)
@@ -110,6 +111,7 @@ namespace ASP_NET_PZ_03.Controllers
 
             identity.AddClaim(new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()));
             identity.AddClaim(new Claim(ClaimTypes.Email, user.Email));
+            identity.AddClaim(new Claim(ClaimTypes.Name,user.FullName ?? String.Empty));
 
             var principal = new ClaimsPrincipal(identity);
 

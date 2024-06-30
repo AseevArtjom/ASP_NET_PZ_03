@@ -1,40 +1,40 @@
 ﻿@using ASP_NET_PZ_03.Models.Forms
 @model RegisterForm
 @{
-	Layout = "_Layout";
-	ViewData["Title"] = "Register";
+	ViewData["Title"] = "Create";
 
 
 }
 <head>
 	<link rel="stylesheet" href="/css/Form.css">
 </head>
-<form method="post" enctype="multipart/form-data">
+<form asp-controller="User" method="post" asp-action="Create" enctype="multipart/form-data">
 	<div class="form_container">
+
 		<label>Full Name :</label>
 		<input type="text" placeholder="Your Full Name..." asp-for=FullName>
 		<p style="color: red; font-size: 13px">
 			@Html.ValidationMessageFor(x=>x.FullName)
 		</p>
-		<label>Email :</label>
+
+		<label>Login(Email) :</label>
 		<input type="text" placeholder="Your Email..." asp-for=Email>
 		<p style="color: red; font-size: 13px">
-			@Html.ValidationMessageFor(x=>x.Email)
+			@Html.ValidationMessageFor(x=>x.Password)
 		</p>
 
-		<label >Password :</label>
+		<label>Password :</label>
 		<input type="text" placeholder="Your Password..." asp-for=Password>
 		<p style="color: red; font-size: 13px">
 			@Html.ValidationMessageFor(x=>x.Password)
 		</p>
 
 		<label >Confirm Password :</label>
-		<input type="text" placeholder="Your Password..." asp-for=ConfirmPassword>
+		<input type="text" placeholder="Confirm Password..." asp-for=ConfirmPassword>
 		<p style="color: red; font-size: 13px">
-			@Html.ValidationMessageFor(x=>x.Password)
+			@Html.ValidationMessageFor(x=>x.ConfirmPassword)
 		</p>
 
-		<button type="submit" class="btn btn-success">Register</button>
-		<a asp-controller="Account" asp-action="Login" asp-route-return-url="@Context.Request.Query["ReturnUrl"]" class="btn btn-secondary">Login</a>
+		<input type="submit">
 	</div>
 </form>
