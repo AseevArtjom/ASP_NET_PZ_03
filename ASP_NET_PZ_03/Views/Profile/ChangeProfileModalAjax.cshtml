@@ -1,0 +1,54 @@
+﻿@using ASP_NET_PZ_03.Models.Forms
+@model ChangeProfileForm
+@{
+	ViewData["Title"] = "ResetPassword";
+	var User = ViewData["User"] as User;
+
+}
+<head>
+	<link rel="stylesheet" href="/css/Form.css">
+</head>
+<form asp-controller="Profile" method="post" asp-action="ChangeProfileAjax">
+<div class="Modal_content">
+    <div class="accordion" id="accordionPanelsStayOpenExample">
+      <div class="accordion-item">
+        <h2 class="accordion-header">
+          <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseOne" aria-expanded="true" aria-controls="panelsStayOpen-collapseOne">
+            About me
+          </button>
+        </h2>
+        <div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse show">
+          <div class="accordion-body">
+            <form>
+                            @if (User.FullName != string.Empty)
+                            {
+                              <div class="d-flex"> 
+                                  <label asp-for="FullName">FullName : </label>
+                                  <a style="margin-left:1160px;cursor:pointer;text-decoration: none;color:black;" class="fa-solid fa-xmark" asp-action="CloseAction" asp-controller="Profile"></a>
+                              </div>
+                              <input asp-for="FullName" value="@User.FullName" style="display:block;font-size:20px;font-weight:600"/>
+                            }
+              <label asp-for="Email">Email : </label>
+              <input asp-for="Email" value="@User.Email" style="display:block;font-size:20px;font-weight:600"/>
+              <div style="text-align:center;">
+                <button type="submit" style="width:200px;" class="btn btn-success" asp-action="SubmitChanges" asp-controller="Profile">Submit</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      <div class="accordion-item">
+        <h2 class="accordion-header">
+          <button class="accordion-button collapsed bg-danger text-white" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseThree" aria-expanded="false" aria-controls="panelsStayOpen-collapseThree">
+            Danger Zone
+          </button>
+        </h2>
+        <div id="panelsStayOpen-collapseThree" class="accordion-collapse collapse">
+          <div class="accordion-body">
+              <button class="btn btn-danger ResetPassword">Change Password</button>
+          </div>
+        </div>
+      </div>
+    </div>
+</div>
+</form>

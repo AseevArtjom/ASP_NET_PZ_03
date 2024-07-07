@@ -4,51 +4,78 @@
 @{
     Layout = "_Layout";
     ViewData["Title"] = "Profile";
-    var User = ViewData["User"];
+    var user = ViewData["User"] as User;
 }
 <link rel="stylesheet" href="/css/Form.css">
 <script src="/js/Confirm-delete.js"></script>
 
-<div class="accordion" id="accordionPanelsStayOpenExample">
-  <div class="accordion-item">
-    <h2 class="accordion-header">
-      <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseOne" aria-expanded="true" aria-controls="panelsStayOpen-collapseOne">
-        About me
-      </button>
-    </h2>
-    <div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse show">
-      <div class="accordion-body">
-        @if(Model.FullName != string.Empty){
-            <label asp-for="FullName">FullName : </label>
-            <h5>@Model.FullName</h5>
-        }
-        <label asp-for="Email">Email : </label>
-        <h5>@Model.Email</h5>
+<div class="Modal_content">
+    <div class="accordion" id="accordionPanelsStayOpenExample">
+      <div class="accordion-item">
+        <h2 class="accordion-header">
+          <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseOne" aria-expanded="true" aria-controls="panelsStayOpen-collapseOne">
+            About me
+          </button>
+        </h2>
+        <div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse show">
+          <div class="accordion-body">
+            @if (Model.FullName != string.Empty)
+            {
+                <div class="d-flex"> 
+                    <label asp-for="FullName">FullName : </label>
+                    <i style="margin-left:1160px;cursor:pointer;" class="fa-solid fa-pen-to-square change-profile"></i>
+                </div>
+                <h5>@Model.FullName</h5>
+            }
+            <label asp-for="Email">Email : </label>
+            <h5>@Model.Email</h5>
+            @foreach(var role in User.Claims.Where(x => x.Type == ClaimTypes.Role).Select(x => x.Value).ToList())
+            {
+                <span class="badge bg-success">@role</span>
+            }
+          </div>
+        </div>
+      </div>
+      <div class="accordion-item">
+        <h2 class="accordion-header">
+          <button class="accordion-button collapsed bg-danger text-white" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseThree" aria-expanded="false" aria-controls="panelsStayOpen-collapseThree">
+            Danger Zone
+          </button>
+        </h2>
+        <div id="panelsStayOpen-collapseThree" class="accordion-collapse collapse">
+          <div class="accordion-body">
+              <button class="btn btn-danger ResetPassword">Change Password</button>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
-  <div class="accordion-item">
-    <h2 class="accordion-header">
-      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseTwo" aria-expanded="false" aria-controls="panelsStayOpen-collapseTwo">
-        Settings
-      </button>
-    </h2>
-    <div id="panelsStayOpen-collapseTwo" class="accordion-collapse collapse">
-      <div class="accordion-body">
-        <strong>This is the second item's accordion body.</strong> It is hidden by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It's also worth noting that just about any HTML can go within the <code>.accordion-body</code>, though the transition does limit overflow.
-      </div>
-    </div>
-  </div>
-  <div class="accordion-item">
-    <h2 class="accordion-header">
-      <button class="accordion-button collapsed bg-danger text-white" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseThree" aria-expanded="false" aria-controls="panelsStayOpen-collapseThree">
-        Danger Zone
-      </button>
-    </h2>
-    <div id="panelsStayOpen-collapseThree" class="accordion-collapse collapse">
-      <div class="accordion-body">
-          <button class="btn btn-danger" asp-action="ResetPasswordAjax" asp-controller="Profile">Change Password</button>
-      </div>
-    </div>
-  </div>
 </div>
+
+
+<script>
+    $(".ResetPassword").on("click", function (e) {
+        let url = `/Profile/ResetPasswordModalAjax/${@Model.Id}`;
+        let contentEl = $(".Modal_content");
+
+        fetch(url, {
+            method: "GET"
+        })
+        .then(r => r.text())
+        .then(html => {
+            contentEl.html(html)
+        });
+    });
+    $(".change-profile").on("click",function(e){
+        let url = `/Profile/ChangeProfileAjax/${@Model.Id}`;
+        let contentEl = $(".Modal_content");
+
+        fetch(url,{
+            method: "GET"
+        })
+        .then(r => r.text())
+        .then(html =>{
+            contentEl.html(html)
+        });
+    });
+</script>
+

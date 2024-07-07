@@ -111,7 +111,8 @@ namespace ASP_NET_PZ_03.Controllers
 
             identity.AddClaim(new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()));
             identity.AddClaim(new Claim(ClaimTypes.Email, user.Email));
-            identity.AddClaim(new Claim(ClaimTypes.Name,user.FullName ?? String.Empty));
+            identity.AddClaim(new Claim("FullName", user.FullName ?? string.Empty));
+
 
             var principal = new ClaimsPrincipal(identity);
 
@@ -123,6 +124,15 @@ namespace ASP_NET_PZ_03.Controllers
         {
             await HttpContext.SignOutAsync(IdentityConstants.ApplicationScheme);
             return RedirectToAction("Index", "Home");
+        }
+
+        // Denied
+
+        [HttpGet]
+        public IActionResult AccessDenied(string? returnPath)
+        {
+            ViewData["ReturnUrl"] = returnPath;
+            return View();
         }
     }
 }

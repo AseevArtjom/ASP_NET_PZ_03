@@ -45,38 +45,37 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="Index">Users</a>
                         </li>
                     </ul>
-                    @if(User.Identity.IsAuthenticated){
-                        var userName = User.Claims.First(x => x.Type == ClaimTypes.Name).Value;
-                        if(userName == string.Empty)
-                        {
-                            userName = User.Claims.First(x => x.Type == ClaimTypes.Email).Value;
-                        }
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        var fullNameClaim = User.Claims.FirstOrDefault(x => x.Type == "FullName")?.Value;
+                        var userName = !string.IsNullOrEmpty(fullNameClaim) ? fullNameClaim : User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Email)?.Value;
+
                         <div class="navbar-nav">
                             <li>
                                 <div class="dropdown dropstart">
-                                  <button class="btn btn-danger dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    @userName
-                                  </button>
-                                  <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" asp-controller="Profile" asp-action="Index">Profile</a></li>
-                                    <li><a class="dropdown-item" href="#">Another action</a></li>
+                                    <button class="btn btn-danger dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                        @userName
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <li><a class="dropdown-item" asp-controller="Profile" asp-action="Index">Profile</a></li>
+                                        <li><a class="dropdown-item" href="#">Another action</a></li>
                                         <li>
-                                            <form method="post" >
-                                                    <button class="dropdown-item" asp-action="Logout" asp-controller="Account">Logout
-
-                                                </button>
+                                            <form method="post" asp-controller="Account" asp-action="Logout">
+                                                <button class="dropdown-item">Logout</button>
                                             </form>
                                         </li>
-                                  </ul>
+                                    </ul>
                                 </div>
                             </li>
                         </div>
-                    }
-                    else{
+                                    }
+                                    else
+                                    {
                         <form>
                             <button asp-controller="Account" asp-action="Login" class="btn btn-success">Log In</button>
                         </form>
                     }
+
                 </div>
             </div>
         </nav>

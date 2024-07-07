@@ -9,7 +9,8 @@ using System.Reflection;
 
 namespace ASP_NET_PZ_03.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "Admin")]
+    
     public class ProfessionController : Controller
     {
         private readonly LocalUploadedFileStorage _fileStorage;
