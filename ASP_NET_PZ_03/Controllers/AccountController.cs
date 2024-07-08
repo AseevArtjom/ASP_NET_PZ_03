@@ -113,6 +113,11 @@ namespace ASP_NET_PZ_03.Controllers
             identity.AddClaim(new Claim(ClaimTypes.Email, user.Email));
             identity.AddClaim(new Claim("FullName", user.FullName ?? string.Empty));
 
+            var userRoles = await _userManager.GetRolesAsync(user);
+            userRoles.ToList().ForEach(r =>
+            {
+                identity.AddClaim(new Claim(ClaimTypes.Role,r));
+            });
 
             var principal = new ClaimsPrincipal(identity);
 

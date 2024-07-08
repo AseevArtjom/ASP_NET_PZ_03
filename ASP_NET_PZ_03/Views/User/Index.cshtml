@@ -23,27 +23,53 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach(var item in Model){
+                @{
+                    var userEmail = User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Email)?.Value;
+                }
+
+                @foreach (var item in Model)
+                {
                     <tr>
                         <td>@item.Id</td>
                         <td>@item.FullName</td>
-                        <td>@item.Email</td>
-                        <td></td>
                         <td>
-                            <div class="control" style="text-align:right;">
-                                <a asp-controller="User" asp-action="ResetPassword" 
-                                   asp-route-id="@item.Id" class="btn btn-outline-primary">
-                                    Reset Password
-                                </a>
-                                <a asp-controller="User" asp-action="DeleteAjax" asp-route-id="@item.Id" 
-                                   class="btn btn-outline-danger mx-1 confirm-action"
-                                   data-confirm-message="Are you sure you want to delete the user?"
-                                   data-success-message="User was deleted"
-                                   data-error-message="User wasn't deleted">
-                                    Delete
-                                </a>
+                            <div class="d-flex align-items-center">
+                                <span>@item.Email</span>
+                                @if (string.Equals(item.Email, userEmail))
+                                {
+                                    <span class="badge bg-success ms-2">It's you</span>
+                                }
                             </div>
                         </td>
+
+
+                        @if (!string.Equals(item.Email, userEmail))
+                        {
+                            <td>
+                                <div class="control text-end">
+                                    <a asp-controller="User" asp-action="ResetPassword" 
+                                       asp-route-id="@item.Id" class="btn btn-outline-primary">
+                                        Reset Password
+                                    </a>
+
+                                    <a asp-controller="Role" asp-action="UserRoles" asp-route-id="@item.Id" class="btn btn-outline-primary mx-1">
+                                        Roles
+                                    </a>
+
+                                    <a asp-controller="User" asp-action="DeleteAjax" asp-route-id="@item.Id" 
+                                       class="btn btn-outline-danger confirm-action"
+                                       data-confirm-message="Are you sure you want to delete the user?"
+                                       data-success-message="User was deleted"
+                                       data-error-message="User wasn't deleted">
+                                        Delete
+                                    </a>
+                                </div>
+                            </td>
+                        }
+                        else
+                        {
+                            <td colspan="2"></td>
+                        }
                     </tr>
                 }
             </tbody>
